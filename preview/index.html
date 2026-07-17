@@ -92,8 +92,7 @@
     @keyframes dash{to{stroke-dashoffset:-60px}}
     .walkmap circle{fill:#fff}
     .walkmap .node{fill:#ff4059}
-    .walker{offset-path:path('M 50 700 C 280 560, 270 400, 500 475 S 690 320, 900 130');animation:go 5s linear infinite;position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 11px rgba(255,255,255,.2),0 0 28px white}
-    @keyframes go{to{offset-distance:100%}}
+    .walker{position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 11px rgba(255,255,255,.2),0 0 28px white}
     .walk-number{position:absolute;right:13vw;bottom:15vh;background:var(--pin);border-radius:28px;padding:30px 38px;box-shadow:0 25px 45px rgba(230,0,35,.3)}
     .walk-number b{display:block;font:800 clamp(58px,6vw,96px)/.8 'DM Mono';letter-spacing:-.1em}
     .walk-number span{display:block;margin-top:17px;font-size:16px;line-height:1.5}
@@ -253,10 +252,14 @@
 
   <!-- GSAP from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
   <script>
     /* =====================================================================
        3D DEPTH ZOOM TRANSITION ENGINE
        ===================================================================== */
+
+    // Register GSAP MotionPath Plugin
+    gsap.registerPlugin(MotionPath);
 
     const chapters = [...document.querySelectorAll('.chapter')];
     const marks    = [...document.querySelectorAll('.progress i')];
@@ -303,6 +306,89 @@
       });
     }
 
+    /* ── Infinite loop animations for active element details ── */
+    function initLoops() {
+      // Chapter 1: Orb pulse
+      gsap.to(".intro .orb", {
+        scale: 1.05,
+        duration: 5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+
+      // Chapter 2: Search bar float
+      gsap.to(".search", {
+        y: -8,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+
+      // Chapter 3: Nodes pulse
+      gsap.to(".walkmap circle", {
+        r: "+=2",
+        duration: 2,
+        stagger: 0.3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+
+      // Chapter 4: Card floats (3D parallax effect)
+      gsap.to(".card.one", {
+        y: -10,
+        x: -4,
+        rotationZ: -1,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+      gsap.to(".card.two", {
+        y: 10,
+        x: 4,
+        rotationZ: 1,
+        duration: 4.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 0.5
+      });
+
+      // Chapter 5: Metrics float
+      gsap.to(".metric.red", {
+        y: -92,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+      gsap.to(".metric.black", {
+        y: 8,
+        duration: 3.8,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 0.3
+      });
+    }
+
+    // Initialize walker path animation
+    function initWalker() {
+      gsap.to(".walker", {
+        motionPath: {
+          path: ".walkmap path",
+          align: ".walkmap path",
+          alignOrigin: [0.5, 0.5]
+        },
+        duration: 6,
+        repeat: -1,
+        ease: "none"
+      });
+    }
+
     /* ── Navigate to chapter index ── */
     function goTo(next) {
       next = Math.max(0, Math.min(chapters.length - 1, next));
@@ -317,6 +403,11 @@
 
       const chPrev = chapters[prev];
       const chNext = chapters[next];
+
+      // Manage active classes
+      chapters.forEach((ch, idx) => {
+        ch.classList.toggle('active', idx === next);
+      });
 
       // Make incoming chapter visible but transparent (positioned behind)
       gsap.set(chNext, {
@@ -385,6 +476,8 @@
     /* ── Initialize ── */
     setInitial();
     updateNav();
+    initLoops();
+    initWalker();
     // Mark first chapter as active for CSS animation hooks
     chapters[0].classList.add('active');
 
