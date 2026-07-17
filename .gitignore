@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Except this gitignore file itself
+!.gitignore
+
+# Except the preview folder and its contents recursively
+!/preview/
+!/preview/**
