@@ -31,11 +31,10 @@
     .scroll-hint:after{content:'↓';font-size:22px;animation:bob 1.2s infinite alternate}
     @keyframes bob{to{transform:translateY(7px)}}
 
-    /* === 3D STAGE: perspective wrapper === */
+    /* === 3D STAGE === */
     main{position:relative;height:100vh;overflow:hidden;perspective:1200px;perspective-origin:50% 50%}
 
     /* === CHAPTER FOUNDATION === */
-    /* All chapters are stacked, initially invisible & pushed back in Z */
     .chapter{
       position:absolute;inset:0;
       display:grid;align-items:center;
@@ -44,25 +43,24 @@
       opacity:0;
       visibility:hidden;
       pointer-events:none;
-      /* GSAP will own all transform states — no CSS transform here */
       will-change:transform,opacity,filter;
       transform-style:preserve-3d;
     }
     .chapter.active{visibility:visible;pointer-events:auto;}
 
-    /* === ELEMENT BASE STATES (GSAP animates from these) === */
+    /* === ELEMENT BASE STATES === */
     .chapter > *{position:relative;z-index:1}
     .eyebrow{font:700 13px 'DM Mono';letter-spacing:.14em;text-transform:uppercase;color:var(--pin);margin-bottom:24px}
     .copy{max-width:780px}
-    .copy h1,.copy h2{margin:0;letter-spacing:-.045em;line-height:.95;text-wrap:balance}
-    .copy h1{font-size:clamp(65px,9.7vw,140px)}
-    .copy h2{font-size:clamp(56px,7.7vw,120px)}
-    .copy p{font-size:clamp(18px,1.65vw,27px);line-height:1.6;max-width:610px;margin:32px 0 0;font-weight:500;text-wrap:pretty}
+    .copy h1,.copy h2{margin:0;letter-spacing:-.03em;line-height:1;text-wrap:balance}
+    .copy h1{font-size:clamp(58px,8.4vw,128px)}
+    .copy h2{font-size:clamp(50px,6.8vw,108px)}
+    .copy p{font-size:clamp(17px,1.55vw,24px);line-height:1.65;max-width:620px;margin:28px 0 0;font-weight:500;text-wrap:pretty}
 
-    /* Elements that get animated in individually — start invisible */
+    /* Elements animated individually — start invisible */
     .anim{opacity:0;will-change:transform,opacity,filter}
 
-    /* === INTRO: EXPANDING PIN === */
+    /* === CH1: INTRO — EXPANDING PIN === */
     .intro{background:var(--pin);color:white}
     .intro:before{content:'';position:absolute;inset:0;opacity:.13;background-image:radial-gradient(#fff .8px,transparent .8px);background-size:7px 7px}
     .intro .eyebrow{color:#ffd5dc}
@@ -73,89 +71,108 @@
     @keyframes orb-pulse{0%{box-shadow:0 0 0 80px rgba(255,255,255,.08),0 0 0 170px rgba(255,255,255,.05),0 0 0 290px rgba(255,255,255,.04)}100%{box-shadow:0 0 0 110px rgba(255,255,255,.06),0 0 0 210px rgba(255,255,255,.04),0 0 0 360px rgba(255,255,255,.025)}}
     .intro.active .orb{animation:orb-pulse 5s cubic-bezier(0.22,1,0.36,1) infinite alternate}
 
-    /* === PROBLEM: PIN FIELD === */
+    /* === CH2: PLATFORM INTRO === */
+    .platform{background:var(--cream);color:var(--ink)}
+    .platform .copy{max-width:640px}
+    .platform-pills{display:flex;flex-direction:column;gap:16px;margin-top:36px}
+    .pill{display:flex;align-items:flex-start;gap:16px;padding:18px 22px;background:#fff;border-radius:16px;box-shadow:0 8px 28px rgba(23,23,23,.07)}
+    .pill-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;font-size:20px}
+    .pill-icon.red{background:var(--soft)}
+    .pill-icon.mint{background:var(--mint)}
+    .pill b{display:block;font-size:15px;margin-bottom:4px}
+    .pill p{margin:0;font-size:13px;color:#666;line-height:1.5;font-weight:400}
+    /* platform visual right side */
+    .platform-visual{position:absolute;right:6vw;top:50%;transform:translateY(-50%);width:42vw;height:64vh;display:grid;place-items:center}
+    .pv-pin{position:absolute;width:clamp(120px,13vw,200px);aspect-ratio:.78;border-radius:16px;background:var(--col);box-shadow:0 18px 36px rgba(80,22,34,.14);transform:rotate(var(--rot));animation:rise var(--dur,4s) cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:var(--delay)}
+    .pv-pin:after{content:'';position:absolute;inset:18% 15%;border:6px solid rgba(255,255,255,.8);border-radius:14px;transform:rotate(-8deg)}
+    .pv-board{position:absolute;left:50%;top:50%;translate:-50% -50%;width:clamp(90px,10vw,140px);height:clamp(100px,11vw,160px);border-radius:12px;background:#fff;box-shadow:0 20px 40px rgba(23,23,23,.12);display:grid;place-items:center;text-align:center;padding:14px}
+    .pv-board b{font:700 11px 'DM Mono';letter-spacing:.12em;color:var(--pin)}
+    .pv-board span{font-size:28px;display:block;margin-bottom:6px}
+
+    /* === CH3: PROBLEM — PIN FIELD === */
     .problem{background:linear-gradient(105deg,var(--cream) 53%,#ffe6ea 53%)}
     .problem .copy{max-width:720px}
     .pinfield{position:absolute;right:8vw;top:50%;transform:translateY(-50%);width:42vw;height:60vh}
     .tile{position:absolute;width:clamp(75px,10vw,164px);aspect-ratio:.78;border-radius:18%;background:var(--col);box-shadow:0 20px 34px rgba(80,22,34,.13);transform:rotate(var(--rot));animation:rise var(--dur,3.5s) cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:var(--delay)}
-    @keyframes rise{to{translate:0 -24px;rotate:5deg;box-shadow:0 32px 48px rgba(80,22,34,.18)}}
+    @keyframes rise{to{translate:0 -22px;rotate:4deg;box-shadow:0 32px 48px rgba(80,22,34,.18)}}
     .tile:after{content:'';position:absolute;inset:20% 17%;border:8px solid rgba(255,255,255,.85);border-radius:18px;transform:rotate(-10deg)}
-    .search{margin-top:42px;background:white;width:min(570px,100%);padding:23px 29px;border-radius:99px;box-shadow:0 20px 45px rgba(119,30,46,.12);font-size:18px;color:#777}
-    .search b{color:var(--ink);font-size:25px;margin-right:15px}
+    .search{margin-top:40px;background:white;width:min(540px,100%);padding:20px 26px;border-radius:99px;box-shadow:0 20px 45px rgba(119,30,46,.12);font-size:17px;color:#777}
+    .search b{color:var(--ink);font-size:22px;margin-right:12px}
 
-    /* === PIXIE: PATH WALK === */
+    /* === CH4: PIXIE — PATH WALK === */
     .pixie{background:#1b1b1b;color:white}
     .pixie .eyebrow{color:#ff9dac}
     .pixie .copy p{color:#d2d2d2}
     .walkmap{position:absolute;right:4vw;top:0;width:58vw;height:100%;opacity:.95}
     .walkmap svg{width:100%;height:100%;overflow:visible}
-    /* animated path dash */
     .walkmap .trail{fill:none;stroke:#e60023;stroke-width:7;stroke-linecap:round;stroke-dasharray:10 20;animation:dash 1.5s linear infinite}
     @keyframes dash{to{stroke-dashoffset:-60px}}
-    /* node glow pulse */
-    .walkmap .node{fill:#ff4059;filter:drop-shadow(0 0 0px rgba(255,64,89,0))}
+    .walkmap .node{fill:#ff4059}
     .walkmap .node-glow{fill:none;stroke:#ff4059;stroke-width:2;opacity:0;animation:node-ping 2.8s cubic-bezier(0.22,1,0.36,1) infinite}
     .walkmap .node-glow:nth-child(1){animation-delay:0s}
     .walkmap .node-glow:nth-child(2){animation-delay:.9s}
     .walkmap .node-glow:nth-child(3){animation-delay:1.8s}
     @keyframes node-ping{0%{r:0;opacity:.7}70%{opacity:.2}100%{r:36px;opacity:0}}
-    /* walker: SVG animateMotion uses same viewBox coords — no offset-path mismatch */
     .walkmap .walker-dot{fill:#fff;filter:drop-shadow(0 0 10px rgba(255,255,255,.9)) drop-shadow(0 0 24px rgba(255,255,255,.5))}
-    .walk-number{position:absolute;right:13vw;bottom:15vh;background:var(--pin);border-radius:28px;padding:30px 38px;box-shadow:0 25px 45px rgba(230,0,35,.3)}
-    .walk-number b{display:block;font:800 clamp(58px,6vw,96px)/.8 'DM Mono';letter-spacing:-.1em}
-    .walk-number span{display:block;margin-top:17px;font-size:16px;line-height:1.5}
+    .walk-number{position:absolute;right:13vw;bottom:15vh;background:var(--pin);border-radius:24px;padding:26px 34px;box-shadow:0 25px 45px rgba(230,0,35,.3)}
+    .walk-number b{display:block;font:800 clamp(52px,5.5vw,86px)/1 'DM Mono';letter-spacing:-.04em}
+    .walk-number span{display:block;margin-top:14px;font-size:15px;line-height:1.5;opacity:.9}
 
-    /* === PINSAGE: CONTEXT LENS === */
+    /* === CH5: PINSAGE — CONTEXT LENS === */
     .sage{background:#effaf7}
     .sage .copy{max-width:620px}
     .objects{position:absolute;right:9vw;top:50%;transform:translateY(-50%);width:48vw;height:62vh}
     .card{position:absolute;width:clamp(180px,20vw,320px);padding:18px;background:#fff;border-radius:20px;box-shadow:0 25px 50px rgba(25,87,69,.12)}
     .card.one{left:0;top:3%}
     .card.two{right:0;bottom:3%}
-    .art{height:clamp(150px,19vw,240px);border-radius:14px;position:relative;overflow:hidden}
+    .art{height:clamp(140px,18vw,220px);border-radius:14px;position:relative;overflow:hidden}
     .bed{background:#ffc5ce}
     .bed:before{content:'';position:absolute;left:15%;right:15%;bottom:18%;height:42%;border:15px solid white;border-bottom:0;border-radius:22px 22px 0 0}
     .bed:after{content:'';position:absolute;left:25%;top:32%;width:45%;height:24%;border-radius:15px;background:#fff8e9;box-shadow:110px 38px #ef6577}
     .fence{background:#bce9dc}
     .fence:before{content:'';position:absolute;inset:29% 10% 13%;background:repeating-linear-gradient(90deg,#fff 0 20px,transparent 20px 30px);clip-path:polygon(0 30%,10% 0,20% 30%,30% 0,40% 30%,50% 0,60% 30%,70% 0,80% 30%,90% 0,100% 30%,100% 100%,0 100%)}
     .fence:after{content:'';position:absolute;left:0;right:0;top:51%;border-top:13px solid #fff}
-    .card b{display:block;font-size:20px;margin-top:15px}
-    .card span{color:#777;font-size:14px}
-    .context-ring{position:absolute;left:50%;top:50%;translate:-50% -50%;width:180px;height:180px;border:11px solid var(--pin);border-radius:50%;background:rgba(255,250,249,.84);display:grid;place-items:center;text-align:center;font:500 16px 'DM Mono';color:var(--pin);box-shadow:0 0 0 18px rgba(230,0,35,.12);animation:ring-rotate 18s linear infinite,ring-pulse 3.2s cubic-bezier(0.22,1,0.36,1) infinite alternate}
+    .card b{display:block;font-size:18px;margin-top:13px}
+    .card span{color:#777;font-size:13px}
+    .context-ring{position:absolute;left:50%;top:50%;translate:-50% -50%;width:176px;height:176px;border:10px solid var(--pin);border-radius:50%;background:rgba(255,250,249,.86);display:grid;place-items:center;text-align:center;font:600 14px 'DM Mono';color:var(--pin);box-shadow:0 0 0 18px rgba(230,0,35,.10);animation:ring-rotate 18s linear infinite,ring-pulse 3.2s cubic-bezier(0.22,1,0.36,1) infinite alternate}
     @keyframes ring-rotate{to{rotate:360deg}}
-    @keyframes ring-pulse{to{scale:1.09;box-shadow:0 0 0 28px rgba(230,0,35,.07)}}
-    /* ring text counter-rotates so it stays readable */
+    @keyframes ring-pulse{to{scale:1.09;box-shadow:0 0 0 28px rgba(230,0,35,.06)}}
     .context-ring span{display:block;animation:ring-text 18s linear infinite reverse}
     @keyframes ring-text{to{rotate:360deg}}
 
-    /* === RESULTS: MERGE STORY === */
+    /* === CH6: RESULTS === */
     .results{background:var(--cream)}
-    .results .copy{margin-top:-150px}
-    .metrics{position:absolute;right:10vw;bottom:13vh;display:flex;gap:20px}
-    .metric{width:clamp(205px,22vw,330px);padding:35px 31px;border-radius:24px;color:white;box-shadow:0 25px 45px rgba(69,16,26,.18)}
-    .metric.red{background:var(--pin);transform:translateY(-80px);animation:metric-float-red 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate}
-    .metric.black{background:#1b1b1b;transform:translateY(0);animation:metric-float-dark 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:.6s}
-    @keyframes metric-float-red{to{transform:translateY(-90px);box-shadow:0 38px 60px rgba(69,16,26,.22)}}
-    @keyframes metric-float-dark{to{transform:translateY(-10px);box-shadow:0 38px 60px rgba(0,0,0,.28)}}
-    .metric b{font:800 clamp(57px,6vw,90px)/.8 'DM Mono';letter-spacing:-.10em}
-    .metric h3{font-size:18px;line-height:1.35;margin:21px 0 0}
-    .metric p{font-size:14px;line-height:1.4;opacity:.75}
-    .take{position:absolute;left:12vw;bottom:13vh;color:var(--pin);font:800 18px 'DM Mono';letter-spacing:.04em}
-    .take:before{content:'→';font-size:25px;margin-right:10px}
+    .results .copy{margin-top:-120px}
+    .metrics{position:absolute;right:10vw;bottom:12vh;display:flex;gap:20px;align-items:flex-end}
+    .metric{width:clamp(200px,21vw,320px);padding:32px 28px;border-radius:22px;color:white;box-shadow:0 25px 45px rgba(69,16,26,.18)}
+    .metric.red{background:var(--pin);animation:metric-float-red 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate}
+    .metric.black{background:#1b1b1b;animation:metric-float-dark 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:.65s}
+    @keyframes metric-float-red{0%{transform:translateY(-60px)}to{transform:translateY(-72px);box-shadow:0 38px 60px rgba(69,16,26,.22)}}
+    @keyframes metric-float-dark{0%{transform:translateY(0)}to{transform:translateY(-12px);box-shadow:0 38px 60px rgba(0,0,0,.28)}}
+    /* === NUMBER DISPLAY — fix letter-spacing & line-height === */
+    .metric b{
+      display:block;
+      font:800 clamp(54px,5.8vw,88px)/1.1 'DM Mono';
+      letter-spacing:-.02em;   /* was -.10em — letters were crashing */
+    }
+    .metric h3{font-size:17px;line-height:1.4;margin:18px 0 0}
+    .metric p{font-size:13px;line-height:1.45;opacity:.78;margin-top:8px}
+    .take{position:absolute;left:12vw;bottom:12vh;color:var(--pin);font:800 17px 'DM Mono';letter-spacing:.04em}
+    .take:before{content:'→';font-size:23px;margin-right:10px}
 
-    /* === OUTRO === */
+    /* === CH7: OUTRO === */
     .outro{background:var(--pin);color:#fff;text-align:center;justify-content:center}
     .outro:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.16),transparent 40%)}
     .outro .copy{max-width:980px}
     .outro .eyebrow{color:#ffd7dd}
     .outro .copy p{margin-left:auto;margin-right:auto}
-    .outro .smallpin{width:130px;margin:0 auto 28px}
+    .outro .smallpin{width:120px;margin:0 auto 26px}
     @keyframes smallbreathe{0%{transform:scale(1)}100%{transform:scale(1.08) rotate(-4deg)}}
     .outro.active .smallpin{animation:smallbreathe 4s ease-in-out infinite alternate}
 
     /* === REDUCED MOTION === */
     @media(prefers-reduced-motion:reduce){
-      .chapter,.anim,.tile,.walkmap .node-glow,.walkmap .trail,
+      .chapter,.anim,.tile,.pv-pin,.walkmap .node-glow,.walkmap .trail,
       .context-ring,.metric,.outro .smallpin,.intro .giant-pin,.intro .orb{
         animation:none!important;
         transition:opacity .3s!important;
@@ -175,26 +192,63 @@
   <canvas id="graph"></canvas>
   <div id="flash"></div>
   <header class="topbar"><div class="brand"><img src="Pinterest%20Symbol%20SVG.svg" alt="Pinterest logo"> <span>Pinterest</span></div><small>DATA MINING / 2026</small></header>
-  <nav class="progress" aria-label="Chapter progress"><i></i><i></i><i></i><i></i><i></i><i></i></nav>
+  <nav class="progress" aria-label="Chapter progress"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></nav>
   <div class="scroll-hint">SCROLL TO EXPLORE</div>
   <main>
-    <!-- === CHAPTER 1: INTRODUCTION === -->
+
+    <!-- === CHAPTER 1: INTRO === -->
     <section class="chapter intro active">
       <div class="orb"></div>
       <img class="giant-pin" src="Pinterest%20Symbol%20SVG.svg" alt="">
       <div class="copy">
         <div class="eyebrow anim">Data Mining Case Study</div>
-        <h1 class="serif anim">จากไอเดีย<br>สู่ <i>Pin</i> ที่ใช่</h1>
-        <p class="anim">Pinterest ค้นหาแรงบันดาลใจที่ตรงใจ ท่ามกลาง Pin กว่า 2 พันล้านรายการได้อย่างไร?</p>
+        <h1 class="serif anim">Pinterest<br>× Data Mining</h1>
+        <p class="anim">ตัวอย่างการใช้ Data Mining บนแพลตฟอร์มที่มี Pin กว่า 2,000 ล้านรายการ</p>
       </div>
     </section>
 
-    <!-- === CHAPTER 2: THE PROBLEM === -->
+    <!-- === CHAPTER 2: PLATFORM INTRO === -->
+    <section class="chapter platform">
+      <div class="copy">
+        <div class="eyebrow anim">แพลตฟอร์ม</div>
+        <h2 class="anim">Pinterest คืออะไร?</h2>
+        <div class="platform-pills anim">
+          <div class="pill">
+            <div class="pill-icon red">📌</div>
+            <div>
+              <b>Pin</b>
+              <p>รูปภาพหรือวิดีโอที่ผู้ใช้อัปโหลดหรือบันทึกไว้ — แสดงผลงานหรือสิ่งที่สนใจ</p>
+            </div>
+          </div>
+          <div class="pill">
+            <div class="pill-icon mint">🗂️</div>
+            <div>
+              <b>Board</b>
+              <p>ลิสต์สำหรับจัดหมวดหมู่ Pins ที่สนใจ เก็บรวบรวมไว้กลับมาดูภายหลัง</p>
+            </div>
+          </div>
+        </div>
+        <p class="anim" style="margin-top:28px">จุดต่างจากโซเชียลทั่วไป — Pinterest เน้น <b>ค้นหาไอเดีย</b> ไม่ใช่การโพสต์ชีวิตประจำวัน</p>
+      </div>
+      <div class="platform-visual anim">
+        <i class="pv-pin" style="--col:#e60023;--rot:-11deg;--delay:0s;--dur:4.2s;left:4%;top:8%"></i>
+        <i class="pv-pin" style="--col:#dff6ef;--rot:14deg;--delay:.5s;--dur:3.7s;right:2%;top:5%"></i>
+        <i class="pv-pin" style="--col:#ffd0d7;--rot:-4deg;--delay:.9s;--dur:4.8s;left:36%;top:36%"></i>
+        <i class="pv-pin" style="--col:#dceeff;--rot:16deg;--delay:.3s;--dur:3.9s;left:2%;bottom:12%"></i>
+        <i class="pv-pin" style="--col:#ffd985;--rot:-14deg;--delay:.7s;--dur:4.4s;right:0%;bottom:8%"></i>
+        <div class="pv-board">
+          <span>🗂️</span>
+          <b>MY BOARD</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- === CHAPTER 3: THE PROBLEM === -->
     <section class="chapter problem">
       <div class="copy">
-        <div class="eyebrow anim">The challenge</div>
-        <h2 class="anim">ทุก Pin คือ<br>ความเป็นไปได้</h2>
-        <p class="anim">แต่ผู้ใช้ไม่ได้ต้องการ "ทุกอย่าง" พวกเขาต้องการไอเดียถัดไปที่เชื่อมกับสิ่งที่กำลังสนใจอยู่</p>
+        <div class="eyebrow anim">ความท้าทาย</div>
+        <h2 class="anim">2 พันล้าน Pin<br>จะหาที่ใช่<br>ได้อย่างไร?</h2>
+        <p class="anim">ผู้ใช้แต่ละคนต้องการไอเดีย<b>ถัดไป</b>ที่เชื่อมกับสิ่งที่กำลังสนใจอยู่ — นี่คือจุดที่ Data Mining เข้ามา</p>
         <div class="search anim"><b>⌕</b> ค้นหาไอเดียที่ใช่…</div>
       </div>
       <div class="pinfield anim">
@@ -206,34 +260,29 @@
       </div>
     </section>
 
-    <!-- === CHAPTER 3: PIXIE === -->
+    <!-- === CHAPTER 4: PIXIE === -->
     <section class="chapter pixie">
       <div class="copy">
         <div class="eyebrow anim">Technique 01</div>
-        <h2 class="anim"><span class="serif">Pixie</span><br>สุ่มเดินหา<br>ความเกี่ยวข้อง</h2>
-        <p class="anim">Random Walk เดินจาก Pin ที่ผู้ใช้สนใจไปตามเส้นเชื่อมของกราฟ — ยิ่งเจอบ่อย ยิ่งควรแนะนำ</p>
+        <h2 class="anim"><span class="serif">Pixie</span><br>Random Walk<br>บนกราฟ</h2>
+        <p class="anim">มอง Pin และ Board เป็นโหนดในกราฟขนาดใหญ่ แล้วเดินสุ่มจากจุดที่ผู้ใช้สนใจ — โหนดไหนถูกผ่านบ่อย แปลว่าเกี่ยวข้องมากที่สุด</p>
       </div>
       <div class="walkmap anim">
         <svg viewBox="0 0 1000 900">
-          <!-- animated dashed trail -->
           <path class="trail" d="M50 700 C280 560 270 400 500 475 S690 320 900 130"/>
-          <!-- graph node pings -->
           <circle class="node-glow" cx="50"  cy="700" r="0"/>
           <circle class="node-glow" cx="500" cy="475" r="0"/>
           <circle class="node-glow" cx="900" cy="130" r="0"/>
-          <!-- static nodes -->
           <circle fill="#fff" cx="263" cy="555" r="16"/>
           <circle fill="#fff" cx="670" cy="335" r="16"/>
           <circle class="node" cx="50"  cy="700" r="21"/>
           <circle class="node" cx="500" cy="475" r="28"/>
           <circle class="node" cx="900" cy="130" r="23"/>
-          <!-- walker: animateMotion uses same viewBox coords as path — no offset-path mismatch -->
           <circle class="walker-dot" r="11">
             <animateMotion dur="5s" repeatCount="indefinite" calcMode="spline"
               keyTimes="0;1" keySplines="0.42 0 0.58 1"
               path="M50 700 C280 560 270 400 500 475 S690 320 900 130"/>
           </circle>
-          <!-- glow halo around walker -->
           <circle fill="rgba(255,255,255,0.18)" r="22">
             <animateMotion dur="5s" repeatCount="indefinite" calcMode="spline"
               keyTimes="0;1" keySplines="0.42 0 0.58 1"
@@ -246,12 +295,12 @@
       </div>
     </section>
 
-    <!-- === CHAPTER 4: PINSAGE === -->
+    <!-- === CHAPTER 5: PINSAGE === -->
     <section class="chapter sage">
       <div class="copy">
         <div class="eyebrow anim">Technique 02</div>
-        <h2 class="anim"><span class="serif">PinSage</span><br>เข้าใจ<br>"บริบท"</h2>
-        <p class="anim">GCN เรียนรู้ Pin จากเพื่อนบ้านของมัน จึงแยกสิ่งที่หน้าตาคล้าย แต่มีความหมายคนละเรื่องได้</p>
+        <h2 class="anim"><span class="serif">PinSage</span><br>เรียนรู้<br>"บริบท"</h2>
+        <p class="anim">GCN (Graph Convolutional Network) จาก Stanford เรียนรู้ Pin จากเพื่อนบ้านในกราฟ — แยกสิ่งที่หน้าตาคล้ายแต่ความหมายต่างกันได้</p>
       </div>
       <div class="objects anim">
         <article class="card one">
@@ -266,26 +315,34 @@
       </div>
     </section>
 
-    <!-- === CHAPTER 5: RESULTS === -->
+    <!-- === CHAPTER 6: RESULTS === -->
     <section class="chapter results">
       <div class="copy">
-        <div class="eyebrow anim">What changed</div>
+        <div class="eyebrow anim">ผลลัพธ์จริง</div>
         <h2 class="anim">เมื่อเข้าใจ<br>ความสัมพันธ์<br><span class="serif" style="color:var(--pin)">ผลลัพธ์เกิดขึ้น</span></h2>
       </div>
       <div class="take anim">3B NODES &nbsp;•&nbsp; 18TB TRAINING DATA</div>
       <div class="metrics">
-        <article class="metric red anim"><b>+30%</b><h3>engagement<br>ของผู้ใช้</h3><p>เจอไอเดียที่ตรงใจเร็วขึ้น</p></article>
-        <article class="metric black anim"><b>+25%</b><h3>Shop the Look<br>impressions</h3><p>แรงบันดาลใจกลายเป็นโอกาสซื้อ</p></article>
+        <article class="metric red anim">
+          <b data-count="30" data-prefix="+">+30%</b>
+          <h3>Engagement<br>ของผู้ใช้</h3>
+          <p>เจอไอเดียที่ตรงใจเร็วขึ้น อยู่ในแอปนานขึ้น</p>
+        </article>
+        <article class="metric black anim">
+          <b data-count="25" data-prefix="+">+25%</b>
+          <h3>Shop the Look<br>Impressions</h3>
+          <p>แรงบันดาลใจกลายเป็นโอกาสซื้อสินค้า</p>
+        </article>
       </div>
     </section>
 
-    <!-- === CHAPTER 6: OUTRO === -->
+    <!-- === CHAPTER 7: OUTRO === -->
     <section class="chapter outro">
       <div class="copy">
         <img class="smallpin anim" src="Pinterest%20Symbol%20SVG.svg" alt="Pinterest logo">
-        <div class="eyebrow anim">The takeaway</div>
+        <div class="eyebrow anim">สรุป</div>
         <h2 class="serif anim">Data Mining ที่ดี<br>ไม่ได้แค่หา<br>"รูปที่คล้าย"</h2>
-        <p class="anim">แต่มันหา <b>ไอเดียที่ใช่</b> เพื่อให้ผู้ใช้ค้นพบสิ่งต่อไปได้อย่างเป็นธรรมชาติ</p>
+        <p class="anim">แต่มันหา <b>ไอเดียที่ใช่</b> — ทำให้ผู้ใช้ค้นพบสิ่งต่อไปได้อย่างเป็นธรรมชาติ และสร้างโอกาสทางธุรกิจทั้งด้าน engagement และ Shopping</p>
       </div>
     </section>
   </main>
@@ -304,28 +361,25 @@
 
     let current = 0;
     let locked  = false;
-    const LOCK_MS = 1000; // guard against double-fire
 
     /* ── Easing presets ── */
-    const EXP_OUT  = 'expo.out';   // cinematic deceleration
-    const QUINT_OUT= 'power3.out'; // snappier for elements
+    const EXP_OUT   = 'expo.out';
+    const QUINT_OUT = 'power3.out';
 
     /* ── Depth Zoom parameters ── */
-    const DEPTH_BACK  = -400;  // px: how far back exiting slide retreats
-    const DEPTH_FRONT = 600;   // px: how far forward incoming slides start from
+    const DEPTH_BACK  = -400;
+    const DEPTH_FRONT = 600;
 
     /* ── Duration ── */
-    const DUR_SLIDE   = 0.82;  // seconds: slide move
-    const DUR_ELEM_IN = 0.70;  // seconds: element reveal
-    const STAGGER     = 0.11;  // seconds between elements
+    const DUR_SLIDE   = 0.82;
+    const DUR_ELEM_IN = 0.70;
+    const STAGGER     = 0.11;
 
-    /* ── Set initial states for all chapters ── */
+    /* ── Set initial states ── */
     function setInitial() {
       chapters.forEach((ch, i) => {
         if (i === 0) {
-          // First chapter: visible, in place
           gsap.set(ch, { opacity: 1, z: 0, scale: 1, filter: 'blur(0px)', visibility: 'visible' });
-          // Reveal elements immediately
           const elems = ch.querySelectorAll('.anim');
           gsap.set(elems, { opacity: 0, y: 50, filter: 'blur(8px)' });
           gsap.to(elems, {
@@ -335,9 +389,27 @@
             delay: 0.2
           });
         } else {
-          // All others: pushed far back, invisible
           gsap.set(ch, { opacity: 0, z: DEPTH_BACK * 2, scale: 0.7, filter: 'blur(20px)', visibility: 'hidden' });
           gsap.set(ch.querySelectorAll('.anim'), { opacity: 0, y: 60, filter: 'blur(10px)' });
+        }
+      });
+    }
+
+    /* ── Count-up animation for metric numbers ── */
+    function animateCount(el) {
+      const target = parseInt(el.dataset.count, 10);
+      const prefix = el.dataset.prefix || '';
+      if (!target) return;
+      const dur = 1.4;
+      gsap.fromTo({ v: 0 }, { v: 0 }, {
+        v: target,
+        duration: dur,
+        ease: 'power2.out',
+        onUpdate: function() {
+          el.textContent = prefix + Math.round(this.targets()[0].v) + '%';
+        },
+        onComplete: function() {
+          el.textContent = prefix + target + '%';
         }
       });
     }
@@ -348,16 +420,19 @@
       if (next === current || locked) return;
       locked = true;
 
-      const prev    = current;
+      const prev     = current;
       const goingFwd = next > prev;
-      current       = next;
+      current        = next;
 
       updateNav();
 
       const chPrev = chapters[prev];
       const chNext = chapters[next];
 
-      // Make incoming chapter visible but transparent (positioned behind)
+      /* Toggle .active class for CSS animation hooks (orb, giant-pin, smallpin, etc.) */
+      chPrev.classList.remove('active');
+      chNext.classList.add('active');
+
       gsap.set(chNext, {
         visibility: 'visible',
         opacity: 0,
@@ -365,19 +440,21 @@
         scale: goingFwd ? 0.55 : 1.35,
         filter: 'blur(24px)',
       });
-      // Reset element states for incoming chapter
       const nextElems = chNext.querySelectorAll('.anim');
       gsap.set(nextElems, { opacity: 0, y: goingFwd ? 70 : -50, filter: 'blur(12px)' });
 
       const tl = gsap.timeline({
         onComplete: () => {
-          // Hide the outgoing chapter
           gsap.set(chPrev, { visibility: 'hidden' });
           locked = false;
+
+          /* Trigger count-up when Results slide fully arrives (index 5) */
+          if (current === 5) {
+            chNext.querySelectorAll('[data-count]').forEach(animateCount);
+          }
         }
       });
 
-      /* — EXIT: current slide recedes into depth — */
       tl.to(chPrev, {
         opacity: 0,
         z: goingFwd ? DEPTH_BACK : -DEPTH_BACK,
@@ -387,27 +464,19 @@
         ease: EXP_OUT,
       }, 0);
 
-      /* — ENTER: next slide emerges from depth — */
       tl.to(chNext, {
-        opacity: 1,
-        z: 0,
-        scale: 1,
-        filter: 'blur(0px)',
+        opacity: 1, z: 0, scale: 1, filter: 'blur(0px)',
         duration: DUR_SLIDE,
         ease: EXP_OUT,
-      }, 0.08); // tiny overlap for continuity
+      }, 0.08);
 
-      /* — ELEMENTS: stagger in after slide arrives — */
       tl.to(nextElems, {
-        opacity: 1,
-        y: 0,
-        filter: 'blur(0px)',
+        opacity: 1, y: 0, filter: 'blur(0px)',
         duration: DUR_ELEM_IN,
         ease: QUINT_OUT,
         stagger: STAGGER,
-      }, DUR_SLIDE * 0.45); // start during slide, not after
+      }, DUR_SLIDE * 0.45);
 
-      /* — FLASH: micro white pulse synced to transition peak — */
       tl.fromTo(flash,
         { opacity: 0 },
         { opacity: 0.08, duration: 0.18, yoyo: true, repeat: 1, ease: 'power2.inOut' },
@@ -424,7 +493,6 @@
     /* ── Initialize ── */
     setInitial();
     updateNav();
-    // Mark first chapter as active for CSS animation hooks
     chapters[0].classList.add('active');
 
     /* ══════════════════════════════
@@ -434,7 +502,7 @@
     addEventListener('wheel', e => {
       e.preventDefault();
       const now = performance.now();
-      if (now - lastWheel < 850) return; // throttle
+      if (now - lastWheel < 850) return;
       lastWheel = now;
       if (Math.abs(e.deltaY) > 8) goTo(current + (e.deltaY > 0 ? 1 : -1));
     }, { passive: false });
@@ -491,7 +559,7 @@
         }
       }
       points.forEach(p => {
-        ctx.fillStyle = current > 3 ? '#e60023' : '#777';
+        ctx.fillStyle = current > 4 ? '#e60023' : '#777';
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
       });
       requestAnimationFrame(draw);
