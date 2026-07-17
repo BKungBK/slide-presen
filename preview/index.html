@@ -70,14 +70,15 @@
     .intro .orb{position:absolute;width:1000px;height:1000px;border-radius:50%;right:-140px;top:50%;transform:translateY(-50%);border:1px solid rgba(255,255,255,.35);box-shadow:0 0 0 80px rgba(255,255,255,.08),0 0 0 170px rgba(255,255,255,.05),0 0 0 290px rgba(255,255,255,.04)}
     @keyframes breath{0%{transform:translateY(-50%)}100%{transform:translateY(calc(-50% - 36px)) rotate(-7deg) scale(1.035)}}
     .intro.active .giant-pin{animation:breath 7s ease-in-out infinite alternate}
-    @keyframes orb-pulse{to{box-shadow:0 0 0 100px rgba(255,255,255,.06),0 0 0 200px rgba(255,255,255,.04),0 0 0 340px rgba(255,255,255,.03)}}
+    @keyframes orb-pulse{0%{box-shadow:0 0 0 80px rgba(255,255,255,.08),0 0 0 170px rgba(255,255,255,.05),0 0 0 290px rgba(255,255,255,.04)}100%{box-shadow:0 0 0 110px rgba(255,255,255,.06),0 0 0 210px rgba(255,255,255,.04),0 0 0 360px rgba(255,255,255,.025)}}
+    .intro.active .orb{animation:orb-pulse 5s cubic-bezier(0.22,1,0.36,1) infinite alternate}
 
     /* === PROBLEM: PIN FIELD === */
     .problem{background:linear-gradient(105deg,var(--cream) 53%,#ffe6ea 53%)}
     .problem .copy{max-width:720px}
     .pinfield{position:absolute;right:8vw;top:50%;transform:translateY(-50%);width:42vw;height:60vh}
-    .tile{position:absolute;width:clamp(75px,10vw,164px);aspect-ratio:.78;border-radius:18%;background:var(--col);box-shadow:0 20px 34px rgba(80,22,34,.13);transform:rotate(var(--rot));animation:rise 3.5s ease-in-out infinite alternate;animation-delay:var(--delay)}
-    @keyframes rise{to{translate:0 -28px;rotate:7deg}}
+    .tile{position:absolute;width:clamp(75px,10vw,164px);aspect-ratio:.78;border-radius:18%;background:var(--col);box-shadow:0 20px 34px rgba(80,22,34,.13);transform:rotate(var(--rot));animation:rise var(--dur,3.5s) cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:var(--delay)}
+    @keyframes rise{to{translate:0 -24px;rotate:5deg;box-shadow:0 32px 48px rgba(80,22,34,.18)}}
     .tile:after{content:'';position:absolute;inset:20% 17%;border:8px solid rgba(255,255,255,.85);border-radius:18px;transform:rotate(-10deg)}
     .search{margin-top:42px;background:white;width:min(570px,100%);padding:23px 29px;border-radius:99px;box-shadow:0 20px 45px rgba(119,30,46,.12);font-size:18px;color:#777}
     .search b{color:var(--ink);font-size:25px;margin-right:15px}
@@ -88,12 +89,18 @@
     .pixie .copy p{color:#d2d2d2}
     .walkmap{position:absolute;right:4vw;top:0;width:58vw;height:100%;opacity:.95}
     .walkmap svg{width:100%;height:100%;overflow:visible}
-    .walkmap path{fill:none;stroke:#e60023;stroke-width:7;stroke-linecap:round;stroke-dasharray:10 20;animation:dash 1.5s linear infinite}
+    /* animated path dash */
+    .walkmap .trail{fill:none;stroke:#e60023;stroke-width:7;stroke-linecap:round;stroke-dasharray:10 20;animation:dash 1.5s linear infinite}
     @keyframes dash{to{stroke-dashoffset:-60px}}
-    .walkmap circle{fill:#fff}
-    .walkmap .node{fill:#ff4059}
-    .walker{offset-path:path('M 50 700 C 280 560, 270 400, 500 475 S 690 320, 900 130');animation:go 5s linear infinite;position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 11px rgba(255,255,255,.2),0 0 28px white}
-    @keyframes go{to{offset-distance:100%}}
+    /* node glow pulse */
+    .walkmap .node{fill:#ff4059;filter:drop-shadow(0 0 0px rgba(255,64,89,0))}
+    .walkmap .node-glow{fill:none;stroke:#ff4059;stroke-width:2;opacity:0;animation:node-ping 2.8s cubic-bezier(0.22,1,0.36,1) infinite}
+    .walkmap .node-glow:nth-child(1){animation-delay:0s}
+    .walkmap .node-glow:nth-child(2){animation-delay:.9s}
+    .walkmap .node-glow:nth-child(3){animation-delay:1.8s}
+    @keyframes node-ping{0%{r:0;opacity:.7}70%{opacity:.2}100%{r:36px;opacity:0}}
+    /* walker: SVG animateMotion uses same viewBox coords — no offset-path mismatch */
+    .walkmap .walker-dot{fill:#fff;filter:drop-shadow(0 0 10px rgba(255,255,255,.9)) drop-shadow(0 0 24px rgba(255,255,255,.5))}
     .walk-number{position:absolute;right:13vw;bottom:15vh;background:var(--pin);border-radius:28px;padding:30px 38px;box-shadow:0 25px 45px rgba(230,0,35,.3)}
     .walk-number b{display:block;font:800 clamp(58px,6vw,96px)/.8 'DM Mono';letter-spacing:-.1em}
     .walk-number span{display:block;margin-top:17px;font-size:16px;line-height:1.5}
@@ -114,16 +121,22 @@
     .fence:after{content:'';position:absolute;left:0;right:0;top:51%;border-top:13px solid #fff}
     .card b{display:block;font-size:20px;margin-top:15px}
     .card span{color:#777;font-size:14px}
-    .context-ring{position:absolute;left:50%;top:50%;translate:-50% -50%;width:180px;height:180px;border:11px solid var(--pin);border-radius:50%;background:rgba(255,250,249,.84);display:grid;place-items:center;text-align:center;font:500 16px 'DM Mono';color:var(--pin);box-shadow:0 0 0 18px rgba(230,0,35,.12);animation:ring 2.8s ease-in-out infinite alternate}
-    @keyframes ring{to{scale:1.15;rotate:12deg}}
+    .context-ring{position:absolute;left:50%;top:50%;translate:-50% -50%;width:180px;height:180px;border:11px solid var(--pin);border-radius:50%;background:rgba(255,250,249,.84);display:grid;place-items:center;text-align:center;font:500 16px 'DM Mono';color:var(--pin);box-shadow:0 0 0 18px rgba(230,0,35,.12);animation:ring-rotate 18s linear infinite,ring-pulse 3.2s cubic-bezier(0.22,1,0.36,1) infinite alternate}
+    @keyframes ring-rotate{to{rotate:360deg}}
+    @keyframes ring-pulse{to{scale:1.09;box-shadow:0 0 0 28px rgba(230,0,35,.07)}}
+    /* ring text counter-rotates so it stays readable */
+    .context-ring span{display:block;animation:ring-text 18s linear infinite reverse}
+    @keyframes ring-text{to{rotate:360deg}}
 
     /* === RESULTS: MERGE STORY === */
     .results{background:var(--cream)}
     .results .copy{margin-top:-150px}
     .metrics{position:absolute;right:10vw;bottom:13vh;display:flex;gap:20px}
     .metric{width:clamp(205px,22vw,330px);padding:35px 31px;border-radius:24px;color:white;box-shadow:0 25px 45px rgba(69,16,26,.18)}
-    .metric.red{background:var(--pin);transform:translateY(-80px)}
-    .metric.black{background:#1b1b1b}
+    .metric.red{background:var(--pin);transform:translateY(-80px);animation:metric-float-red 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate}
+    .metric.black{background:#1b1b1b;transform:translateY(0);animation:metric-float-dark 4.5s cubic-bezier(0.22,1,0.36,1) infinite alternate;animation-delay:.6s}
+    @keyframes metric-float-red{to{transform:translateY(-90px);box-shadow:0 38px 60px rgba(69,16,26,.22)}}
+    @keyframes metric-float-dark{to{transform:translateY(-10px);box-shadow:0 38px 60px rgba(0,0,0,.28)}}
     .metric b{font:800 clamp(57px,6vw,90px)/.8 'DM Mono';letter-spacing:-.10em}
     .metric h3{font-size:18px;line-height:1.35;margin:21px 0 0}
     .metric p{font-size:14px;line-height:1.4;opacity:.75}
@@ -142,10 +155,12 @@
 
     /* === REDUCED MOTION === */
     @media(prefers-reduced-motion:reduce){
-      .chapter,.anim,.tile,.walker,.context-ring,.outro .smallpin,.intro .giant-pin{
+      .chapter,.anim,.tile,.walkmap .node-glow,.walkmap .trail,
+      .context-ring,.metric,.outro .smallpin,.intro .giant-pin,.intro .orb{
         animation:none!important;
         transition:opacity .3s!important;
       }
+      .walkmap .walker-dot{animation-play-state:paused!important}
     }
 
     /* === TRANSITION FLASH OVERLAY === */
@@ -199,8 +214,32 @@
         <p class="anim">Random Walk เดินจาก Pin ที่ผู้ใช้สนใจไปตามเส้นเชื่อมของกราฟ — ยิ่งเจอบ่อย ยิ่งควรแนะนำ</p>
       </div>
       <div class="walkmap anim">
-        <svg viewBox="0 0 1000 900"><path d="M50 700 C280 560 270 400 500 475 S690 320 900 130"/><circle class="node" cx="50" cy="700" r="21"/><circle cx="263" cy="555" r="16"/><circle class="node" cx="500" cy="475" r="28"/><circle cx="670" cy="335" r="16"/><circle class="node" cx="900" cy="130" r="23"/></svg>
-        <i class="walker"></i>
+        <svg viewBox="0 0 1000 900">
+          <!-- animated dashed trail -->
+          <path class="trail" d="M50 700 C280 560 270 400 500 475 S690 320 900 130"/>
+          <!-- graph node pings -->
+          <circle class="node-glow" cx="50"  cy="700" r="0"/>
+          <circle class="node-glow" cx="500" cy="475" r="0"/>
+          <circle class="node-glow" cx="900" cy="130" r="0"/>
+          <!-- static nodes -->
+          <circle fill="#fff" cx="263" cy="555" r="16"/>
+          <circle fill="#fff" cx="670" cy="335" r="16"/>
+          <circle class="node" cx="50"  cy="700" r="21"/>
+          <circle class="node" cx="500" cy="475" r="28"/>
+          <circle class="node" cx="900" cy="130" r="23"/>
+          <!-- walker: animateMotion uses same viewBox coords as path — no offset-path mismatch -->
+          <circle class="walker-dot" r="11">
+            <animateMotion dur="5s" repeatCount="indefinite" calcMode="spline"
+              keyTimes="0;1" keySplines="0.42 0 0.58 1"
+              path="M50 700 C280 560 270 400 500 475 S690 320 900 130"/>
+          </circle>
+          <!-- glow halo around walker -->
+          <circle fill="rgba(255,255,255,0.18)" r="22">
+            <animateMotion dur="5s" repeatCount="indefinite" calcMode="spline"
+              keyTimes="0;1" keySplines="0.42 0 0.58 1"
+              path="M50 700 C280 560 270 400 500 475 S690 320 900 130"/>
+          </circle>
+        </svg>
       </div>
       <div class="walk-number anim">
         <b>100K</b><span>รอบของการเดินสุ่ม<br>เพื่อจัดอันดับความสัมพันธ์</span>
@@ -219,7 +258,7 @@
           <div class="art bed"></div>
           <b>ราวกั้นเตียงเด็ก</b><span>บริบท: ของใช้เด็ก</span>
         </article>
-        <div class="context-ring">CONTEXT<br>IS THE<br>SIGNAL</div>
+        <div class="context-ring"><span>CONTEXT<br>IS THE<br>SIGNAL</span></div>
         <article class="card two">
           <div class="art fence"></div>
           <b>ประตูรั้วสวน</b><span>บริบท: สวนและบ้าน</span>
